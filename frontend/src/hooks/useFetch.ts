@@ -71,7 +71,7 @@ export const useFetch = (url: string, favoriteMovie: boolean, method: string) =>
     if(method === "DELETE" && options) fetchDatas(options)    
     
     // Clean up
-    // return () => controller.abort()
+    return () => controller.abort()
   }, [url, favoriteMovie, method, options])
 
   return { datas, data, loading, error, deleteData, postData, updateData };
