@@ -4,6 +4,7 @@ import { makeStyles } from '@mui/styles'
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useFetch } from '../hooks/useFetch';
+import { IMovie } from '../models/Movie';
 
 // CSS custom styles
 const useStyles = makeStyles({
@@ -27,7 +28,7 @@ const MovieForm = () => {
   const classes = useStyles();
   const navigate = useNavigate();
   
-  const { datas, postData, error } = useFetch("http://127.0.0.1:8000/api/movie/", false, "POST"); 
+  const { error, datas, postData } = useFetch("http://127.0.0.1:8000/api/movie/", false, "POST"); 
   
   const [title, setTitle] = useState("");
   const [director, setDirector] = useState("");
@@ -44,7 +45,7 @@ const MovieForm = () => {
       const releaseDateFormated = releaseDate.split('-').reverse().join('/');  
       
       // Construct movie object
-      const movie = { 
+      const movie: IMovie = { 
         title, 
         director, 
         releaseDate: releaseDateFormated, 
@@ -55,10 +56,8 @@ const MovieForm = () => {
     }
   }
 
-  useEffect(() => {
-    if(datas) {
-      navigate('/movies');
-    }
+  useEffect(() => {    
+    if(datas) navigate('/movies');
   }, [datas, navigate])
 
   return (

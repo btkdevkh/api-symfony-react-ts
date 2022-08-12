@@ -1,6 +1,5 @@
 import { format } from "date-fns";
 import { useNavigate, useLocation } from "react-router";
-import { LayoutProps } from "../types/Movie";
 import { 
   AppBar, 
   Toolbar, 
@@ -14,7 +13,7 @@ import {
 } from "@mui/material";
 import { makeStyles } from '@mui/styles'
 import { AddCircle, Favorite, Home, Movie } from '@mui/icons-material'
-
+import { ReactNode } from "react";
 
 // CSS custom styles
 const drawerWidth = 210;
@@ -51,7 +50,11 @@ const useStyles = makeStyles(() => {
   }
 });
 
-const Layout = ({ children }: LayoutProps) => {
+type Props = {
+  children: ReactNode
+}
+
+const Layout = ({ children }: Props) => {
   const classes = useStyles();
   const navigate = useNavigate();
   const location = useLocation();

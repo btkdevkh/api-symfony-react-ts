@@ -1,3 +1,3 @@
 import MoviesList from "../components/MoviesList";
-const Movies = () => <MoviesList favorite={false} />
+const Movies = () => <MoviesList favoriteMovie={false} />;
 export default Movies;

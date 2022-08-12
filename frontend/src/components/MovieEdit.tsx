@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useFetch } from '../hooks/useFetch';
 import { makeStyles } from '@mui/styles'
+import { IMovie } from '../models/Movie';
 
 // CSS custom styles
 const useStyles = makeStyles({
@@ -23,11 +24,15 @@ const useStyles = makeStyles({
   }
 });
 
-const MovieEdit = ({ movie, id }: any) => {  
+type Props = {
+  movie: IMovie
+}
+
+const MovieEdit = ({ movie }: Props) => {  
   const classes = useStyles();
-  const navigate = useNavigate();
-  
-  const { datas, updateData, error } = useFetch(`http://127.0.0.1:8000/api/movie/${id}`, false, "PUT");  
+  const navigate = useNavigate();  
+
+  const { datas, updateData, error } = useFetch(`http://127.0.0.1:8000/api/movie/${movie && movie.id}`, false, "PUT");  
 
   const [title, setTitle] = useState("");
   const [director, setDirector] = useState("");
@@ -44,7 +49,7 @@ const MovieEdit = ({ movie, id }: any) => {
       const releaseDateFormated = releaseDate.split('-').reverse().join('/');  
       
       // Construct movie object
-      const movie = { 
+      const movie: IMovie = { 
         title, 
         director, 
         releaseDate: releaseDateFormated, 
@@ -57,16 +62,15 @@ const MovieEdit = ({ movie, id }: any) => {
 
   useEffect(() => {
     if(movie) {
-      const { title, director, releaseDate, isFavorite }: any = movie;
+      const { title, director, releaseDate, isFavorite } = movie;
 
       setTitle(title);
       setDirector(director);
-      setReleaseDate(releaseDate);
+      setReleaseDate(releaseDate as string);
       setIsFavorite(isFavorite);
     }
 
-    datas && navigate('/movies');
-
+    if(datas) navigate('/movies');
   }, [movie, datas, navigate])
 
   return (

@@ -1,17 +1,17 @@
+import { useEffect, useState } from "react";
+import { Grid, Typography } from "@mui/material";
+import { IMovie } from "../models/Movie";
 import { useFetch } from "../hooks/useFetch";
 import MovieCard from "./MovieCard";
-import { Movie } from "../types/Movie";
-import { Grid, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
 
 type Props = {
-  favorite: boolean
+  favoriteMovie: boolean
 }
 
-const MoviesList = ({ favorite }: Props) => {
+const MoviesList = ({ favoriteMovie }: Props) => {
   const [url, setUrl] = useState('http://127.0.0.1:8000/api/movie/')
   const [method, setMethod] = useState('GET')
-  const { datas, loading, error, updateData, deleteData } = useFetch(url, favorite, method);
+  const { loading, error, datas, updateData, deleteData } = useFetch(url, favoriteMovie, method);  
 
   // Toggle isFavorite
   const toggleIsFavorite = async (id: number) => {
@@ -39,17 +39,17 @@ const MoviesList = ({ favorite }: Props) => {
   }
 
   useEffect(() => {
-    if(url || method) {
-      setUrl(`http://127.0.0.1:8000/api/movie/`)
-      setMethod('GET')
+    if(datas) {
+      setUrl('http://127.0.0.1:8000/api/movie/')
+      setMethod('GET');
     }
-  }, [url, method])
+  }, [datas])
 
   return (
     <Grid container spacing={1}>
       {loading && <Typography mx='auto' variant="h5">Chargement...</Typography>}
       {error && <Typography mx='auto' variant="h5">{error}</Typography>}
-      {datas && datas.length > 0 && datas.map((movie: Movie) => (
+      {datas && datas.length > 0 && datas.map((movie: IMovie) => (
         <Grid item key={movie.id} xs={12} sm={12} md={6} lg={4} mx="auto">
           <MovieCard 
             movie={movie} 

@@ -1,6 +1,7 @@
 import { DeleteOutline } from '@mui/icons-material';
 import { Backdrop, Box, Button, Fade, IconButton, Modal, Typography } from '@mui/material';
 import { useState } from 'react';
+import { IMovie } from '../models/Movie';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -20,7 +21,12 @@ const btnStyle = {
   margin: 2
 }
 
-const ModalDel = ({ movie, handleDelete }: any) => {
+type Props = {
+  movie: IMovie,
+  handleDelete: (id: number) => void
+}
+
+const ModalDel = ({ movie, handleDelete }: Props) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -48,7 +54,7 @@ const ModalDel = ({ movie, handleDelete }: any) => {
               sx={btnStyle} 
               variant="contained" 
               onClick={() => {
-                handleDelete(movie.id);
+                handleDelete(movie.id as number);
                 handleClose();
               }}
             >

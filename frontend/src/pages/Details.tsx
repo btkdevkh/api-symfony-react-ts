@@ -4,22 +4,21 @@ import { useFetch } from "../hooks/useFetch";
 
 const Details = () => {
   const { id } = useParams<{ id: string }>();
-  const { datas, loading, error } = useFetch(`http://127.0.0.1:8000/api/movie/${id}`, false);
-  const { title, director, releaseDate }: any = datas || {};
+  const { data, loading, error } = useFetch(`http://127.0.0.1:8000/api/movie/${id}`, false, 'GET');
 
   return (
     <Grid item xs={12} lg={6} mx="auto">
       {loading && <Typography textAlign="center" variant="h5">Chargement...</Typography>}
       {error && <Typography textAlign="center" variant="h5">{error}</Typography>}
-      {title && (
+      {data && (
         <Card elevation={3}>
           <CardHeader
-            title={title}
-            subheader={`Directeur/trice: ${director}`}
+            title={data.title}
+            subheader={`Directeur/trice: ${data.director}`}
           />
           <CardContent>
             <Typography>
-              Année de sortie: {releaseDate?.split('-').reverse().join('/')}
+              Année de sortie: {data.releaseDate?.split('-').reverse().join('/')}
             </Typography>
           </CardContent>
         </Card>

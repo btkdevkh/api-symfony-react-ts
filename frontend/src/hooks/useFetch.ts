@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Movie } from '../types/Movie';
+import { IMovie } from '../models/Movie';
 
-export const useFetch = (url: string, bool: boolean, method: string = "GET") => {
-  const [datas, setDatas] = useState<Movie[] | null>(null);
+export const useFetch = (url: string, favoriteMovie: boolean, method: string) => {
+  const [datas, setDatas] = useState<IMovie[] | null>(null);
+  const [data, setData] = useState<IMovie | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [options, setOptions] = useState<{} | null>(null);
 
-  const postData = (postData: Movie) => {
+  const postData = (postData: IMovie) => {
     setOptions({
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -15,7 +16,7 @@ export const useFetch = (url: string, bool: boolean, method: string = "GET") => 
     })    
   }
 
-  const updateData = (updatedData: Movie) => {        
+  const updateData = (updatedData: IMovie) => { 
     setOptions({
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -32,6 +33,7 @@ export const useFetch = (url: string, bool: boolean, method: string = "GET") => 
 
   useEffect(() => {
     const controller = new AbortController();
+
     const fetchDatas = async (fetchOptions: any | null) => {
       setLoading(true);
       
@@ -43,17 +45,16 @@ export const useFetch = (url: string, bool: boolean, method: string = "GET") => 
         const jsonDatas = await res.json();
         // console.log("jsonDatas", jsonDatas);
 
-        if(bool === true) {
+        if(favoriteMovie === true) {
           setLoading(false);
-          setDatas(jsonDatas.filter((data: Movie) => data.isFavorite === bool));
+          setDatas(jsonDatas.filter((data: IMovie) => data.isFavorite === favoriteMovie));
           setError(null);
         } else {
           setLoading(false);
           setDatas(jsonDatas);
+          setData(jsonDatas);
           setError(null);
         }
-        
-        setError(null);
       } catch (err: any) {
         if(err.name === "AbortError") {
           console.log("the fetch was aborted");
@@ -67,11 +68,11 @@ export const useFetch = (url: string, bool: boolean, method: string = "GET") => 
     if(method === "GET") fetchDatas(null)
     if(method === "POST" && options) fetchDatas(options)
     if(method === "PUT" && options) fetchDatas(options)
-    if(method === "DELETE" && options) fetchDatas(options)
-
+    if(method === "DELETE" && options) fetchDatas(options)    
+    
     // Clean up
-    return () => controller.abort()
-  }, [url, bool, method, options])
+    // return () => controller.abort()
+  }, [url, favoriteMovie, method, options])
 
-  return { datas, loading, error, deleteData, postData, updateData };
+  return { datas, data, loading, error, deleteData, postData, updateData };
 }
